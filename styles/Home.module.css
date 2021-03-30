@@ -1,6 +1,8 @@
-/* .card:hover,
+.card {
+}
+.card:hover,
 .card:focus,
 .card:active {
-  color: #0070f3;
-  border-color: #0070f3;
-} */
+  color: #f30035;
+  border-color: #f30035;
+}

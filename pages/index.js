@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-// import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css'
 
 export default function Home() {
   return (
@@ -22,7 +22,7 @@ export default function Home() {
 
         <div className="grid">
           <Link href="/about">
-            <a className={"card"}>
+            <a className={`card ${styles.card}`}>
               <h3>About me &rarr;</h3>
               <p>Find in-depth information about me.</p>
             </a>

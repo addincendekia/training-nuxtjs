@@ -11,7 +11,7 @@ export default function Home() {
       </Head>
 
       <main className="main">
-        <h1 className={styles.title}>
+        <h1 className={`title ${styles.title}`}>
           About page, <Link href="/">back to Home!</Link>
         </h1>
 
