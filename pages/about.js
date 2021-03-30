@@ -1,32 +1,32 @@
 import Head from 'next/head'
 import Link from 'next/link'
-// import styles from '../styles/Home.module.css'
+import styles from '../styles/About.module.css'
 
 export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Detail App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="main">
-        <h1 className="title">
-          Learn <a href="https://nextjs.org">Next.js!</a>
+        <h1 className={styles.title}>
+          About page, <Link href="/">back to Home!</Link>
         </h1>
 
         <p className="description">
-          Currently you're in {' '}
-          <code className="code">pages/index.js</code>
+          This is all information about me
         </p>
 
         <div className="grid">
-          <Link href="/about">
-            <a className={"card"}>
-              <h3>About me &rarr;</h3>
-              <p>Find in-depth information about me.</p>
-            </a>
-          </Link>
+          <div className="card">
+            <h3>Addin Cendekia Wahid</h3>
+            <p>
+              <b>location</b>: Surabaya<br></br>
+              <b>email</b>: addin.cendekia@sirclo.com<br></br>
+            </p>
+          </div>
         </div>
       </main>
 
