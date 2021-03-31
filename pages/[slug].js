@@ -1,11 +1,7 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-export default function Home() {
-    const router = useRouter()
-    const { page, sub_page: currentPage } = router.query
-
+export default function Home({ slug }) {
     return (
         <div className="container">
             <Head>
@@ -15,12 +11,12 @@ export default function Home() {
 
             <main className="main">
                 <h1 className="title">
-                    {currentPage} page, <Link href="/">back to Home!</Link>
+                    {slug} page, <Link href="/">back to Home!</Link>
                 </h1>
 
                 <p className="description">
                     Currently you're in {' '}
-                    <code className="code">pages/{page}/{currentPage}</code>
+                    <code className="code">pages/{slug}</code>
                 </p>
             </main>
 
@@ -36,4 +32,22 @@ export default function Home() {
             </footer>
         </div>
     )
+}
+
+// This function gets called at build time
+export async function getStaticPaths() {
+    return {
+        paths: [
+            { params: { slug: 'about' }, },
+            { params: { slug: 'faq' }, },
+        ],
+        fallback: false
+    }
+}
+
+// This also gets called at build time
+export async function getStaticProps({ params }) {
+    const { slug } = params
+    // Pass post data to the page via props
+    return { props: { slug } }
 }

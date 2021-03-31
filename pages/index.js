@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+export default function Home({ characters, info }) {
   return (
     <div className="container">
       <Head>
@@ -21,12 +21,31 @@ export default function Home() {
         </p>
 
         <div className="grid">
-          <Link href="/about">
-            <a className={`card ${styles.card}`}>
-              <h3>About me &rarr;</h3>
-              <p>Find in-depth information about me.</p>
-            </a>
-          </Link>
+          <h3 style={{ marginRight: 15 }}>
+            <Link href="/">
+              <a>Main</a>
+            </Link>
+          </h3>
+          <h3 style={{ marginRight: 15 }}>
+            <Link href="/about">
+              <a>About</a>
+            </Link>
+          </h3>
+          <h3 style={{ marginRight: 15 }}>
+            <Link href="/faq">
+              <a>FAQ</a>
+            </Link>
+          </h3>
+        </div>
+
+        <div className="grid">
+          {characters.map((character) => (
+            <Link href="/" key={character.id}>
+              <a className={`card ${styles.card}`}>
+                <h3>{character.name}</h3>
+              </a>
+            </Link>
+          ))}
         </div>
       </main>
 
@@ -42,4 +61,25 @@ export default function Home() {
       </footer>
     </div>
   )
+}
+
+export async function getServerSideProps(context) {
+  const res = await fetch(`https://rickandmortyapi.com/api/character`)
+  const data = await res.json()
+  const { results: characters, info } = data
+
+  console.log(data)
+
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: {
+      characters,
+      info
+    }, // will be passed to the page component as props
+  }
 }
