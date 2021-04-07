@@ -1,10 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import GuestLayout from "../src/layouts/GuestLayout";
-
-const client = new ApolloClient({
-  uri: 'https://swiftpwa-be.testingnow.me/graphql',
-  cache: new InMemoryCache()
-})
+import client from '../lib/apollo'
 
 function MyApp({ Component, pageProps }) {
   return (

@@ -1,7 +1,9 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { withApollo } from "../lib/apollo/apolloClient";
 import { gql, useQuery } from "@apollo/client";
 import { makeStyles } from '@material-ui/core/styles';
+
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -14,6 +16,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { StarRounded } from '@material-ui/icons';
+import CategoryCard from '../src/components/category/CategoryCard';
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
@@ -23,24 +26,6 @@ const useStyles = makeStyles((theme) => ({
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    position: "relative"
-  },
-  cardBadge: {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-    textAlign: "center"
   },
 }));
 
@@ -68,15 +53,19 @@ const GET_CATEGORIES = gql`
   }
 `
 
-export default function Home() {
+function Home() {
   const classes = useStyles();
   const { loading, error, data } = useQuery(GET_CATEGORIES);
+  // const error = false;
+  // const loading = true;
 
-  if (loading) return (
-    <Backdrop className={classes.backdrop} open={loading}>
-      <CircularProgress color="inherit" />
-    </Backdrop>
-  );
+  let items = [];
+  let categories = [
+    { include_in_menu: 1, id: 1 },
+    { include_in_menu: 1, id: 2 },
+    { include_in_menu: 1, id: 3 },
+  ];
+  let totalCount = 0;
 
   if (error) return (
     <Backdrop className={classes.backdrop} open={error}>
@@ -85,12 +74,15 @@ export default function Home() {
       </Typography>
     </Backdrop>
   );
-  let categories = [];
-  const { items, total_count } = data.categories
 
-  items.forEach((groupCategory) => {
-    categories = [...categories, ...groupCategory.children]
-  })
+  if (!loading) {
+    items = data.categories.items
+    totalCount = data.categories.total_count
+
+    items.forEach((groupCategory) => {
+      categories = [...groupCategory.children]
+    })
+  }
 
   return (
     <>
@@ -107,7 +99,7 @@ export default function Home() {
               Product Categories
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              Currently available {total_count} product categories
+              Currently available {totalCount} product categories
             </Typography>
           </Container>
         </div>
@@ -120,20 +112,9 @@ export default function Home() {
 
               return (
                 <Grid item xs={12} sm={6} md={4} key={category.id}>
-                  <Link href={`/category/${category.id}`}>
+                  <Link href={loading ? `#` : `/category/${category.id}`}>
                     <a style={{ textDecoration: "none" }}>
-                      <Card className={classes.card}>
-                        <Chip className={classes.cardBadge} label="popular" icon={<StarRounded />} color="secondary" />
-                        <CardMedia
-                          className={classes.cardMedia}
-                          image="https://source.unsplash.com/random"
-                          title={`image ${category.name} category`}
-                        />
-                        <CardContent className={classes.cardContent}>
-                          <Typography variant="h6" style={{ fontWeight: "bold" }}>{category.name}</Typography>
-                          <Typography>{category.products.total_count} products</Typography>
-                        </CardContent>
-                      </Card>
+                      <CategoryCard category={category} isLoading={loading} />
                     </a>
                   </Link>
                 </Grid>
@@ -145,3 +126,5 @@ export default function Home() {
     </>
   )
 }
+
+export default withApollo({ ssr: true })(Home);
